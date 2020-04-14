@@ -27,8 +27,7 @@ Create Git Repo
     Input Text  ${field_repo_name}  ${name}
     Input Text  ${field_callsign}  ${callsign}
     Input Text  ${field_shortname}  ${shortname}
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
     Wait Until Page Contains  Edit Basic Information
     Wait Until Page Contains  Properties
 
@@ -44,7 +43,7 @@ Set IO For All Phabricator Uris
     ${ssh_uri_count}  Get Matching Xpath Count  ${link_ssh_uris}
     :FOR  ${index}  IN RANGE  ${ssh_uri_count}
     \  ${current_index}  Evaluate  ${index} + 1
-    \  ${current_uri}  Set Variable  xpath=(${link_ssh_uris}}[${current_index}]
+    \  ${current_uri}  Set Variable  xpath=(${link_ssh_uris})[${current_index}]
     \  Wait Until Element Is Visible  ${current_uri}
     \  Click Link  ${current_uri}
     \  Wait Until Page Contains  Edit URI
@@ -53,8 +52,7 @@ Set IO For All Phabricator Uris
     \  Wait Until Element Is Enabled  ${select_list_io}
     \  Select From List By Value  ${select_list_io}  ${io_type}
     \  Select From List By Value  ${select_list_display}  ${display_type}
-    \  #Click Button  ${button_submit}
-    \  Pause Execution
+    \  Click Button  ${button_submit}
     \  Wait Until Element Is Not Visible  ${button_submit}
     \  Wait Until Page Contains  Edit URI
     \  Go Back To Uri List Page
@@ -69,8 +67,7 @@ Add Bitbucket Uri
     Wait Until Element Is Enabled  ${select_list_io}
     Select From List By Value  ${select_list_io}  ${io_type}
     Select From List By Value  ${select_list_display}  never
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
 
 Edit Bitbucket Uri
     [Arguments]  ${io_type}  ${display_type}
@@ -82,8 +79,7 @@ Edit Bitbucket Uri
     Wait Until Element Is Enabled  ${select_list_io}
     Select From List By Value  ${select_list_io}  ${io_type}
     Select From List By Value  ${select_list_display}  ${display_type}
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
     Wait Until Element Is Not Visible  ${button_submit}
     Wait Until Page Contains  Edit URI
 
@@ -97,8 +93,7 @@ Edit Phabricator Uri
     Wait Until Element Is Enabled  ${select_list_io}
     Select From List By Value  ${select_list_io}  ${io_type}
     Select From List By Value  ${select_list_display}  ${display_type}
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
     Wait Until Element Is Not Visible  ${button_submit}
     Wait Until Page Contains  Edit URI
 
@@ -109,8 +104,7 @@ Set Ssh Credentials
     Click Link  Set Credential
     Wait Until Element Is Visible  ${select_list_credential}
     Select From List By Label  ${select_list_credential}  ${credential_label}
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
     Wait Until Element Is Not Visible  ${button_submit}
     Wait Until Page Contains  Edit URI
 
@@ -126,8 +120,7 @@ Activate Repository
     Wait Until Page Contains  Activate Repository
     Click Link  Activate Repository
     Wait Until Element Is Visible  ${button_submit}
-    #Click Button  ${button_submit}
-    Pause Execution
+    Click Button  ${button_submit}
 
 Create Git Repo And Set Observe Mode
     [Arguments]  ${name}  ${callsign}  ${shortname}  ${uri}  ${io_type}
@@ -140,6 +133,7 @@ Create Git Repo And Set Observe Mode
     ${uri_page_url}  Get Location
     ${repo_details}  Create Dictionary  name=${name}  Repo Status=Migrated  callsign=${callsign}  shortname=${shortname}  ssh link=${uri}  Phab Sync Status=${io_type}  uri_page_url=${uri_page_url}
     Write In Csv  ${REPO_CREATED_CSV}  ${repo_details}
+    Go To Basic Details Page
     Activate Repository
 
 Create Git Repo And Set Observe Mode From Csv
@@ -155,5 +149,5 @@ Create Git Repo And Set Observe Mode From Csv
     \  ${io_type}  Set Variable  observe
     \  ${status}  Get From Dictionary  ${repo_details}  Repo Status
     \  ${status}  Convert To Uppercase  ${status}
-    \  Run Keyword If  '${status}' != 'INACTIVE' or '${status}' != 'MIGRATED'
+    \  Run Keyword If  '${status}' != 'INACTIVE' and '${status}' != 'MIGRATED'
     \  ...  Create Git Repo And Set Observe Mode  ${name}  ${callsign}  ${shortname}  ${uri}  ${io_type}
