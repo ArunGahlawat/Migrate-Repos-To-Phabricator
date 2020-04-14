@@ -1,0 +1,16 @@
+# Ignore all logs and reports
+*.log
+log.html
+output.xml
+report.html
+selenium-screenshot*.*
+reports/
+logs/
+tmp/
+temp/
+.idea/
+# Ignore config
+config.py
+Config.py
+credentials*.py
+sikuli_captured/

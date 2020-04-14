@@ -1,0 +1,4 @@
+BROWSER = "gc"
+HOME_URL = ""
+SOURCE_CSV = "TestData/Bitbucket.csv"
+REPO_CREATED_CSV = "TestData/Repo_Created.csv"
