@@ -21,7 +21,7 @@ ${link_ssh_uri_bitbucket}           //table[@class='aphront-table-view']/tbody/t
 Create Git Repo
     [Arguments]  ${name}  ${callsign}  ${shortname}
     Go To Location  diffusion/edit/form/default/?vcs=git
-    Wait Until Element Is Visible  ${field_repo_name}
+    Wait Until Element Is Visible  ${field_repo_name}  timeout=10
     Wait Until Element Is Visible  ${field_callsign}
     Wait Until Element Is Visible  ${field_shortname}
     Input Text  ${field_repo_name}  ${name}
@@ -68,6 +68,7 @@ Add Bitbucket Uri
     Select From List By Value  ${select_list_io}  ${io_type}
     Select From List By Value  ${select_list_display}  never
     Click Button  ${button_submit}
+    Wait Until Element Is Not Visible  ${button_submit}
 
 Edit Bitbucket Uri
     [Arguments]  ${io_type}  ${display_type}
@@ -120,7 +121,12 @@ Activate Repository
     Wait Until Page Contains  Activate Repository
     Click Link  Activate Repository
     Wait Until Element Is Visible  ${button_submit}
+    Sleep  2 Seconds
     Click Button  ${button_submit}
+    Run Keyword And Ignore Error
+    ...  Wait Until Element Is Not Visible  ${button_submit}  timeout=20
+    Wait Until Page Contains  Importing...  timeout=20
+
 
 Create Git Repo And Set Observe Mode
     [Arguments]  ${name}  ${callsign}  ${shortname}  ${uri}  ${io_type}
@@ -143,6 +149,7 @@ Create Git Repo And Set Observe Mode From Csv
     :FOR  ${INDEX}  IN RANGE  ${csv_length}
     \  ${repo_details}  Get From List  ${csv_data}  ${INDEX}
     \  ${name}  Get From Dictionary  ${repo_details}  Name
+    \  ${name}  Convert To Lowercase  ${name}
     \  ${callsign}  Set Variable  ${EMPTY}
     \  ${shortname}  Set Variable  ${name}
     \  ${uri}  Get From Dictionary  ${repo_details}  ssh link
