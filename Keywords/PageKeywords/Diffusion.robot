@@ -98,7 +98,6 @@ Edit Phabricator Uri
     Wait Until Element Is Not Visible  ${button_submit}
     Wait Until Page Contains  Edit URI
 
-
 Set Ssh Credentials
     [Arguments]  ${credential_label}=K78 jenkins@rivigo.com
     Wait Until Page Contains  Set Credential
@@ -158,3 +157,22 @@ Create Git Repo And Set Observe Mode From Csv
     \  ${status}  Convert To Uppercase  ${status}
     \  Run Keyword If  '${status}' != 'INACTIVE' and '${status}' != 'MIGRATED'
     \  ...  Create Git Repo And Set Observe Mode  ${name}  ${callsign}  ${shortname}  ${uri}  ${io_type}
+
+# io_type : none / readwrite / observe / mirror
+# display_type : always / never
+Enable Phab Repo Hosting
+    [Arguments]  ${url}
+    Go To  ${url}
+    Edit Bitbucket Uri  mirror  never
+    Go Back To Uri List Page
+    Edit Phabricator Uri  readwrite  always
+
+Enable Phab Repo Hosting From Csv
+    [Arguments]  ${csv_data}
+    ${csv_data}  Read From Csv As Dict  ${csv_data}
+    ${csv_length}  Get Length  ${csv_data}
+    :FOR  ${INDEX}  IN RANGE  ${csv_length}
+    \  ${repo_details}  Get From List  ${csv_data}  ${INDEX}
+    \  ${name}  Get From Dictionary  ${repo_details}  name
+    \  ${repo_url}  Get From Dictionary  ${repo_details}  url
+    \  Enable Phab Repo Hosting  ${repo_url}

@@ -13,3 +13,9 @@ Migrate Repos
     [Setup]  Start Browser
     Login To Phabricator
     Create Git Repo And Set Observe Mode From Csv  ${SOURCE_CSV}
+
+Migrate repos to phabricator
+    [Tags]  REPO_HOST
+    [Setup]  Start Browser
+    Login To Phabricator
+    Enable Phab Repo Hosting From Csv  ${MIGRATE_SOURCE_CSV}
