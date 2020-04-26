@@ -16,6 +16,8 @@ ${select_list_credential}           name=credentialPHID
 ${select_list_display}              name=display
 ${link_ssh_uri_phabricator_host}    //table[@class='aphront-table-view']/tbody/tr/td[@class='pri wide']/a[contains(text(),'ssh://git@phabricator.rivigo.com:2222/source/')]
 ${link_ssh_uri_bitbucket}           //table[@class='aphront-table-view']/tbody/tr/td[@class='pri wide']/a[contains(text(),'git@bitbucket.org')]
+${textarea_permanent_refs}          name=permanentRefs
+
 
 *** Keywords ***
 Create Git Repo
@@ -35,6 +37,7 @@ Go To Uris Page
     Wait Until Element Is Visible  ${link_uri}
     Click Link  ${link_uri}
     Wait Until Page Contains  Add New URI
+    Click Element
 
 # io_type : none / readwrite / observe / mirror
 # display_type : always / never
@@ -176,3 +179,39 @@ Enable Phab Repo Hosting From Csv
     \  ${name}  Get From Dictionary  ${repo_details}  name
     \  ${repo_url}  Get From Dictionary  ${repo_details}  url
     \  Enable Phab Repo Hosting  ${repo_url}
+
+
+Update Permanent Refs
+    [Arguments]  ${url}  ${comma_seperated_refs}
+    @{refs}  Split String  ${comma_seperated_refs}  ,
+    ${refs_count}  Get Length  ${refs}
+    Return From Keyword If  ${refs_count} < 1
+    ${branch_url}  Set Variable  ${url}branches/
+    Go To  ${branch_url}
+    ${is_found}  Run Keyword And Return Status
+    ...  Wait Until Page Contains  Edit Branches
+    Return From Keyword If  ${is_found} == ${False}
+    Click Link  Edit Branches
+    Wait Until Page Contains  Edit Repository
+    Clear Element Text  ${textarea_permanent_refs}
+    :FOR  ${INDEX}  IN RANGE  ${refs_count}
+    \  ${current_text}  Get Value  ${textarea_permanent_refs}
+    \  ${curret_ref}  Get From List  ${refs}  ${INDEX}
+    \  ${current_text}  Catenate  SEPARATOR=  ${current_text}  ${curret_ref}
+    \  Input Text  ${textarea_permanent_refs}  ${current_text}
+    \  Press Key  ${textarea_permanent_refs}  \\13
+    Press Key  ${textarea_permanent_refs}  \\8
+    Click Button  ${button_submit}
+    Run Keyword And Ignore Error
+    ...  Wait Until Element Is Not Visible  ${button_submit}  timeout=20
+
+Update Permanent Refs From Csv
+    [Arguments]  ${csv_data}
+    ${csv_data}  Read From Csv As Dict  ${csv_data}
+    ${csv_length}  Get Length  ${csv_data}
+    :FOR  ${INDEX}  IN RANGE  ${csv_length}
+    \  ${repo_details}  Get From List  ${csv_data}  ${INDEX}
+    \  ${name}  Get From Dictionary  ${repo_details}  name
+    \  ${repo_url}  Get From Dictionary  ${repo_details}  manage_url
+    \  ${repo_permanent_refs}  Get From Dictionary  ${repo_details}  permanent_refs
+    \  Update Permanent Refs  ${repo_url}  ${repo_permanent_refs}

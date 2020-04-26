@@ -1,4 +1,6 @@
 BROWSER = "gc"
 HOME_URL = ""
 SOURCE_CSV = "TestData/Bitbucket.csv"
+MIGRATE_SOURCE_CSV = "TestData/Migrate_URI.csv"
 REPO_CREATED_CSV = "TestData/Repo_Created.csv"
+PERMANENT_REFS_CSV = "TestData/permanent_refs.csv"

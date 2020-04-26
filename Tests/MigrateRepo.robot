@@ -19,3 +19,9 @@ Migrate repos to phabricator
     [Setup]  Start Browser
     Login To Phabricator
     Enable Phab Repo Hosting From Csv  ${MIGRATE_SOURCE_CSV}
+
+Set permaent refs for repos
+    [Tags]  repo_refs
+    [Setup]  Start Browser
+    Login To Phabricator
+    Update Permanent Refs From Csv  ${PERMANENT_REFS_CSV}
